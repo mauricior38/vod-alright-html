@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Video events plugin</title>
+<link href="../examples/assets/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+<div class="header">
+	<div class="menu">
+		<a href="https://www.nuevodevel.com/nuevo/"><img src="../examples/assets/images/nuevodevel.png"></a>
+		<div class="browse">&larr; <a href="index.html">Back to examples</a></div>
+	</div>
+</div>
+
+<div class="container">
+	<h1>Events &amp; Analytics plugin</h1>
+
+	<link href="../skins/treso/videojs.min.css" rel="stylesheet" type="text/css" />
+	<script src="../video.min.js"></script>
+	<script src="../nuevo.min.js"></script>
+	<script src="../plugins/videojs.events.js"></script>
+
+	<div class="media-parent">
+		<div class="media-child">
+			<video id="player_1" class="video-js vjs-fluid" controls preload="auto" playsinline poster="../examples/assets/images/coffee.jpg">
+				<source src="//opencdn.b-cdn.net/video/hls/coffee/playlist.m3u8" type="application/x-mpegURL">
+			</video>
+		</div>
+	</div>
+	
+
+
+	<script>
+	var player = videojs('player_1');
+	player.nuevo({title: 'Events Example Video', video_id:'v111'});
+	player.events();
+	player.on('track', (e, data) => {
+		const area = document.getElementById('area');
+				switch(data.event) {
+					case 'firstPlay':
+						area.value="Fisrt Play"; 
+						if(data.sessionId) area.value+="\nSession Id: "+data.sessionId; 
+						if(data.category) area.value+="\nCategory: "+data.category; 
+						if(data.videoId) area.value+="\nVideo Id: "+data.videoId; 
+						if(data.videoTitle) area.value+="\nVideo Title: "+data.videoTitle; 
+						break;
+					case 'buffered': area.value+="\nBuffered ("+data.bufferTime+")";break;
+					case 'pause': area.value+="\nPause ("+data.pauseCount+")"; break;
+					case 'resume': area.value+="\nResume ("+data.resumeCount+")"; break;
+					case '10%': area.value+="\nProgress 10%";break;
+					case '25%': area.value+="\nProgress 25%";break;
+					case '50%': area.value+="\nProgress 50%";break;
+					case '75%': area.value+="\nProgress 75%";break;
+					case '90%': area.value+="\nProgress 90%";break;
+					case 'seek': area.value+="\nSeeked to: "+data.seekTo; break;
+					case 'ended': area.value+="\nVideo completed"; break;
+					case 'resolutionChange': area.value+="\nResolution change: "+data.resolution+"p";break;
+					case 'rateChange': area.value+="\nPlayback reate: "+data.rate;break;
+					case 'mute': area.value+="\nMuted";break;
+					case 'unmute': area.value+="\nUnmuted";break;
+					case 'enterFullscreen': area.value+="\nFullscreen entered";break;
+					case 'exitFullscreen': area.value+="\nFullscreen left";break;
+					case 'summary': area.value+="\nWatched duration:"+data.watchedDuration;break;
+					case 'default': break;
+				}
+			});	
+
+	</script>
+
+<div class="explain">
+The events plugin allows to track a bunch of player events and record the most important events through Google Analycis, Matomo (formerly Piwik), javascript or custom URL.
+<textarea class="area" id="area"></textarea>
+</div>
+
+<h2>Initialize player and plugins</h2>
+This is essential to set unique title and unique id for each video that events you want to track. You can do it in several ways, e.g. as Nuevo plugin options.
+<pre>
+&lt;script&gt;
+	var player = videojs('player_1');
+	player.nuevo({ title:"Events Example Video", video_id:"v111" });
+	player.events(); 
+&lt;/script&gt;
+</pre>
+
+To enable one of available analytics methods just enable appropriate option. Events plugin automatically detects analytics method used on website.
+
+<pre>
+player.events({ analytics:true }); 
+</pre>
+You can also track events through custom URL. This enables an option to record user details through <i>user</i> event if Abstract API Key defined.
+<pre>
+player.events({ trackingUrl: "https://tracking_url", abstractApiKey: "Your API Key" }); 
+</pre>
+To track events through javscript you can listen to track event.
+
+<pre>
+&lt;script&gt;
+player.on('track', (e, data) => {
+  var event_name = data.eventType;
+  let session_id = data.sessionId;
+  let category = data.category;
+  let video_id = data.playerId;
+  let video_title = data.playerTitle;
+});
+&lt;/script&gt;
+</pre>
+
+<br />
+Full plugin's description, list of events available to track, usage tutorial you can find on <a href="https://www.nuevodevel.com/nuevo/showcase/playerevents">Nuevodevel demo</a> website page.
+
+
+</div>
+<div class="footer">
+&copy; 2008 - 2022, <a href="https://www.nuevodevel.com">Nuevodevel Software</a>. All rights reserved.
+</div>
+
+</body>
+</html>
